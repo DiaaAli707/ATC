@@ -1,0 +1,22 @@
+{
+  "name": "atc",
+  "version": "1.0.0",
+  "description": "Automatic Tweet classifier",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/100328119/ATC.git"
+  },
+  "bugs": {
+    "url": "https://github.com/100328119/ATC/issues"
+  },
+  "keywords": [
+    "twitter_api",
+    "naive_bayes_classifier"
+  ],
+  "author": "",
+  "license": "ISC"
+}
