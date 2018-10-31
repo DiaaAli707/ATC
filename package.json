@@ -18,5 +18,11 @@
     "naive_bayes_classifier"
   ],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "express-handlebars": "^3.0.0",
+    "twitter": "^1.7.1"
+  }
 }
