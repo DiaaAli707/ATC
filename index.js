@@ -21,20 +21,33 @@ var client = new Twitter({
   access_token_secret: 'yiDmPs0TrcV961KOHrXu7ZWROgtxogqpkvShKlIGTazAk'
 });
 
-// var params = {
-//   q: '#nodejs',
-//   count: 10,
-//   result_type: 'recent',
-//   lang: 'en'
-// }
+var params0 = {
+  q: '#business',
+  count: 10,
+  result_type: 'recent',
+  lang: 'en'
+};
+
 var params = {
   screen_name:"@tintinjia88",
   count: 10
 }
 
+client.get('search/tweets', params0, function(err, data, response){
+  if(!err){
+    console.log("search by hashtag");
+    for(let i = 0; i < data.statuses.length; i++){
+      console.log(data.statuses[i]);
+      console.log("----------------------");
+    }
+  }else{
+    console.log(err);
+  }
+});
 
 client.get('statuses/user_timeline', params , function(err, data, response) {
   // If there is no error, proceed
+  console.log("search by user");
   if(!err){
     // console.log(data);
     // // Loop through the returned tweets
