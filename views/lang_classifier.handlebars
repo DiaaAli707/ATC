@@ -1,0 +1,39 @@
+
+<div ng-app="ATC" ng-controller="detectlang">
+  <h1 class="title">Naive Baye Classifier</h1>
+    <div id="homepage">
+      <h1>languages Identifier</h1>
+        <div id="ninjas">
+          <div id="ninja-container">
+              <div class="body">
+                  <label>Enter Text: </label>
+                  <textarea type="text" placeholder="Text here..." rows="6" ng-model="lang.data"></textarea>
+                  <input type="button" value="Detect" ng-click="detect()" />
+              </div>
+          </div>
+        </div>
+        <h1>{[{lang_cate}]}</h1>
+  </div>
+
+  <div id="homepage">
+    <h1>Twitter Identifier</h1>
+      <div id="ninjas">
+        <div id="ninja-container">
+            <div class="body">
+                <label>Enter User: </label>
+                <input type="text" id='id' ref="id" placeholder="ID" ng-model="twitter.user" />
+                <input type="button" value="Classifiy" ng-click="classifiy()" />
+              </div>
+            </div>
+        </div>
+      <ul ng-repeat = "tweet in tweets">
+        <li>
+            <span class="ture"></span>
+            <span class="name">{[{tweet.text}]}</span>
+            <span class="rank"></span>
+            <span class="dist">{[{tweet.class}]}</span>
+        </li>
+      </ul>
+</div>
+</div>
+<script src="/js/lang.js"></script>

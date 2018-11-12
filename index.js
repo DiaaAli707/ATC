@@ -6,7 +6,9 @@ const bodyParser = require('body-parser');
 const handlebars = require('express-handlebars').create({defaultLayout:'main'});
 const Twitter = require('twitter');
 const app = express();
-
+const Classifier = require("./classifier/classifier");
+let classifier = new Classifier();
+let lang = new Classifier();
 //handlebars front end framework
 app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
@@ -14,6 +16,46 @@ app.set('view engine', 'handlebars');
 //frontend middleware
 app.use(express.static(__dirname + '/public'));
 
+app.use(bodyParser.json());
+
+app.get('/',(req, res, next)=>{
+  res.render('lang_classifier');
+});
+
+app.post('/lang', (req, res, next)=>{
+  // console.log(req.body.lang);
+  var cate = lang.classifiy(req.body.data);
+  console.log(cate)
+   return res.send(cate);
+});
+
+app.post('/twitter', (req, res, next)=>{
+  var user = req.body.user;
+  console.log(user);
+  var params = {
+    screen_name:req.body.user,
+    count: 10
+  };
+
+  client.get('statuses/user_timeline', params , function(err, data, response) {
+     // If there is no error, proceed
+     if(!err){
+        var tweets = [];
+       for(var i = 0; i<data.length; i++){
+         // console.log(data[i].text);
+          var tweet ={};
+          var cate = classifier.classifiy(data[i].text);
+          tweet.text = data[i].text;
+          tweet.class = cate;
+          tweets.push(tweet);
+       }
+        return res.send(tweets);
+     } else {
+       console.log(err);
+       return res.sendStatus(400);
+     }
+   })
+})
 var client = new Twitter({
   consumer_key: 'uDRdaSrMzHUsTAWV5M95GvlnD',
   consumer_secret: 'Z99B5f8PtWlCPc90M0XqqPpRB1KAPT46N4PA9bHA0gDetjvjfF',
@@ -21,59 +63,111 @@ var client = new Twitter({
   access_token_secret: 'yiDmPs0TrcV961KOHrXu7ZWROgtxogqpkvShKlIGTazAk'
 });
 
-var params0 = {
-  q: '#business',
-  count: 10,
-  result_type: 'recent',
-  lang: 'en'
-};
 
-var params = {
-  screen_name:"@tintinjia88",
-  count: 10
-}
-
-client.get('search/tweets', params0, function(err, data, response){
-  if(!err){
-    console.log("search by hashtag");
-    for(let i = 0; i < data.statuses.length; i++){
-      console.log(data.statuses[i]);
-      console.log("----------------------");
-    }
-  }else{
-    console.log(err);
+var business = {
+    q: '#business',
+    count: 100,
+    result_type: 'recent',
+    lang: 'en',
+    cate:"business"
+  };
+var life =   {
+    q: '#life',
+    count: 100,
+    result_type: 'recent',
+    lang: 'en',
+    cate:"life"
+  };
+var technology =  {
+    q: '#technology',
+    count: 100,
+    result_type: 'recent',
+    lang: 'en',
+    cate:"technology"
+  };
+var social =  {
+    q: '#social',
+    count: 100,
+    result_type: 'recent',
+    lang: 'en',
+    cate:"social"
+  };
+var entertainment =   {
+    q: '#entertainment',
+    count: 100,
+    result_type: 'recent',
+    lang: 'en',
+    cate:'entertainment'
   }
+
+client.get('search/tweets', business, function(err, data, response){
+    if(!err){
+      for(let j = 0; j < data.statuses.length; j++){
+        classifier.training(data.statuses[j].text+" business", "business");
+      }
+    }else{
+      console.log(err);
+    }
 });
 
-client.get('statuses/user_timeline', params , function(err, data, response) {
-  // If there is no error, proceed
-  console.log("search by user");
-  if(!err){
-    // console.log(data);
-    // // Loop through the returned tweets
-    for(let i = 0; i < data.length; i++){
-      console.log(data[i].text);
-      console.log("----------------------");
-      // // Get the tweet Id from the returned data
-      // let id = { id: data.statuses[i].id_str }
-      // // Try to Favorite the selected Tweet
-      // client.post('favorites/create', id, function(err, response){
-      //   // If the favorite fails, log the error message
-      //   if(err){
-      //     console.log(err[0].message);
-      //   }
-      //   // If the favorite is successful, log the url of the tweet
-      //   else{
-      //     let username = response.user.screen_name;
-      //     let tweetId = response.id_str;
-      //     console.log('Favorited: ', `https://twitter.com/${username}/status/${tweetId}`)
-      //   }
-      // });
+client.get('search/tweets', life, function(err, data, response){
+    if(!err){
+      for(let j = 0; j < data.statuses.length; j++){
+        classifier.training(data.statuses[j].text+" life", "life");
+      }
+    }else{
+      console.log(err);
     }
-  } else {
-    console.log(err);
-  }
-})
+});
+
+client.get('search/tweets', social, function(err, data, response){
+    if(!err){
+      for(let j = 0; j < data.statuses.length; j++){
+
+        classifier.training(data.statuses[j].text+" social", "social");
+      }
+    }else{
+      console.log(err);
+    }
+});
+
+client.get('search/tweets', entertainment, function(err, data, response){
+    if(!err){
+      for(let j = 0; j < data.statuses.length; j++){
+        classifier.training(data.statuses[j].text+" entertainment", "entertainment");
+      }
+    }else{
+      console.log(err);
+    }
+});
+client.get('search/tweets', technology, function(err, data, response){
+    if(!err){
+      for(let j = 0; j < data.statuses.length; j++){
+        classifier.training(data.statuses[j].text+" technology", "technology");
+      }
+    }else{
+      console.log(err);
+    }
+});
+
+
+lang.training("Ce texte est en francais", "fr");
+lang.training("Celui ci est aussi en francais", "fr");
+lang.training("La nouvelle inattendue a déconcerté tout le monde.", "fr");
+lang.training("J'ai versé des larmes de joie en apprenant la nouvelle.", "fr");
+lang.training("Je lis le journal pour me tenir informé des dernières nouvelles.", "fr");
+lang.training("Il regarde les nouvelles à la télévision.", "fr");
+lang.training("Le but d'un journal est de diffuser les informations..", "fr");
+lang.training("Elle lit les informations tous les matins dans le journal.", "fr");
+
+lang.training("The unexpected news bewildered everyone.", "en");
+lang.training("I shed tears of joy when I heard the news", "en");
+lang.training("I read the newspaper to keep up with the latest news.", "en");
+lang.training("He is watching the news on the television.", "en");
+lang.training("I like to be the bearer of good news.", "en");
+lang.training("The goal of a newspaper is to circulate the news.", "en");
+lang.training("She reads the news every morning in the newspaper", "en");
+lang.training("Republican candidate Brian Kemp currently leads Abrams with 50.3% of the vote. If Kemp's share dips below 50%, the race automatically goes into a run-off on December 4, even if Kemp is the top vote-getter. For now, Kemp's lead stands at nearly 59,000 votes.", "en");
 
 app.set('port', process.env.PORT || 4000);
 app.listen(app.get('port'), function(){

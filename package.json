@@ -23,6 +23,8 @@
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
     "express-handlebars": "^3.0.0",
+    "stopword": "^0.1.13",
+    "string-tokenizer": "0.0.8",
     "twitter": "^1.7.1"
   }
 }
