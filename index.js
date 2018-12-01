@@ -57,10 +57,10 @@ app.post('/twitter', (req, res, next)=>{
    })
 })
 var client = new Twitter({
-  consumer_key: 'uDRdaSrMzHUsTAWV5M95GvlnD',
-  consumer_secret: 'Z99B5f8PtWlCPc90M0XqqPpRB1KAPT46N4PA9bHA0gDetjvjfF',
-  access_token_key: '1056288155232419841-qw855TT9lRkXbnX4XnxYyoMCyna4fS',
-  access_token_secret: 'yiDmPs0TrcV961KOHrXu7ZWROgtxogqpkvShKlIGTazAk'
+  consumer_key: '',
+  consumer_secret: '',
+  access_token_key: '',
+  access_token_secret: ''
 });
 
 
